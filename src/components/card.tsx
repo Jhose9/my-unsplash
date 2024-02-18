@@ -2,14 +2,16 @@
 import React from 'react'
 import Image from 'next/image';
 import {ThumbsUp} from 'lucide-react';
-import {useRouter} from 'next/navigation';
 import {CardType} from '@/types/types';
+import Link from 'next/link';
 function Card(params:CardType) {
-  const router= useRouter();
   return (
+  <Link   href={{
+    pathname: '/post',
+    query: { id: params.id },
+  }}>
     <div className='mb-7 md:mr-5 hover:scale-105 transition '>
           <Image
-          onClick={()=>router.push("/post")}
         className="rounded-lg shadow-md sm:mr-5 hover:opacity-50"
         src={params.src}
         alt="descripcion"
@@ -25,6 +27,8 @@ function Card(params:CardType) {
      
        </div>
     </div>
+    </Link>
+
   )
 }
 

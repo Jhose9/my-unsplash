@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -15,7 +16,45 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { useState } from "react"
+import {useRouter} from 'next/navigation';
 function ModalLogin() {
+
+  const router=useRouter();
+  const [DatosLogin, setDatosLogin] = useState({
+    username:"",
+    password:""
+  })
+
+const llamar=()=>{
+  console.log(DatosLogin);
+  
+}
+
+  const  handleSubmit= async() =>{
+    const response=await fetch("http://localhost:3100/v1/user/login",{
+      method:"POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(DatosLogin)
+    }
+    )
+    const value= await response.json();
+    if(value.exist==true){
+     localStorage.setItem('login',"true");
+     router.push("/")
+    }else{
+      alert("valor incorrecto");
+    }
+    
+  }
+
+
+  const handleInputChange=(e:any)=>{
+    const {name,value}=e.target;
+    setDatosLogin({...DatosLogin, [name]: value})
+  }
   return (
     <Tabs defaultValue="Login" className="w-[400px]">
       <TabsList className="grid w-full grid-cols-2">
@@ -30,15 +69,15 @@ function ModalLogin() {
           <CardContent className="space-y-2">
             <div className="space-y-1">
               <Label htmlFor="username">UserName</Label>
-              <Input id="username" placeholder="Pedro Duarte" />
+              <Input onChange={handleInputChange} id="username" placeholder="Pedro Duarte"  name="username" value={DatosLogin.username} />
             </div>
             <div className="space-y-1">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" placeholder="*********" />
+              <Input onChange={handleInputChange} id="password" type="number" placeholder="*********" name="password" value={DatosLogin.password} />
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Login</Button>
+            <Button onClick={handleSubmit}>Login</Button>
           </CardFooter>
         </Card>
       </TabsContent>
